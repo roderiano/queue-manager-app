@@ -7,7 +7,7 @@ import {
   SettingOutlined
 } from '@ant-design/icons';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 class AppLayout extends React.Component {
