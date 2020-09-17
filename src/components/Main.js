@@ -1,9 +1,9 @@
 import React from 'react';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 
-import Authentication from './modules/Auth/Authentication';
+import Authentication from './Authentication';
 import AuthenticationManager from "./../services/auth";
-import AppCore from './AppCore';
+import AppCore from './AppLayout';
 
 const Main = () => {
 

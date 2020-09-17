@@ -6,7 +6,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async config => {
-    const token = AuthenticationManager.getToken;
+    let authManager = new AuthenticationManager();
+    const token = authManager.getToken();
     
     if (token) {
       config.headers.Authorization = `Token  ${token}`;

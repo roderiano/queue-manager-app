@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Row, Input, Form, Card, Button, Space, Typography, message } from 'antd';
 import { withRouter, } from 'react-router-dom';
 import { LoginOutlined, } from '@ant-design/icons';
-import api from './../../../services/api';
-import AuthenticationManager from './../../../services/auth';
+import api from '../services/api';
+import AuthenticationManager from '../services/auth';
 
 const { Title } = Typography;
 

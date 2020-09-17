@@ -7,7 +7,7 @@ import {
   LogoutOutlined,
   SettingOutlined
 } from '@ant-design/icons';
-import AuthenticationManager from './../services/auth'
+import AuthenticationManager from '../services/auth'
 
 
 const { Content, Footer, Sider } = Layout;
