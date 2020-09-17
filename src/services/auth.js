@@ -1,11 +1,26 @@
-export const TOKEN_KEY = null;
-export const isAuthenticated = () => localStorage.getItem(TOKEN_KEY) !== null;
-export const getToken = () => localStorage.getItem(TOKEN_KEY);
+export class AuthenticationManager {
 
-export const login = token => {
-  localStorage.setItem(TOKEN_KEY, token);
-};
+  constructor() {
+    this.token_key = null;
+  }
+  
+  login(token) {
+    localStorage.setItem(this.token_key , token);
+  }
 
-export const logout = () => {
-  localStorage.removeItem(TOKEN_KEY);
-};
+  logout() {
+    localStorage.clear();
+  }
+
+  getToken = () => {
+    return localStorage.getItem(this.token_key);
+  }
+
+  isAuthenticated = () => {
+    return localStorage.getItem(this.token_key) !== null;
+  }
+  
+
+}
+
+export default AuthenticationManager;

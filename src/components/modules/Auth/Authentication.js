@@ -3,7 +3,7 @@ import { Row, Input, Form, Card, Button, Space, Typography, message } from 'antd
 import { withRouter, } from 'react-router-dom';
 import { LoginOutlined, } from '@ant-design/icons';
 import api from './../../../services/api';
-import { login, } from './../../../services/auth';
+import AuthenticationManager from './../../../services/auth';
 
 const { Title } = Typography;
 
@@ -13,18 +13,23 @@ class Authentication extends Component {
         username: "",
         password: "",
         token: "",
+        waiting_response: false,
     };
 
 
     handleAuthenticate = async e => {
-        const {username, password} = this.state;
+        const { username, password } = this.state;
 
         try {
+            let authManager = new AuthenticationManager();
+
+            this.setState({ waiting_response: true });
             const response = await api.post("token-auth/", { username, password });
-            login(response.data.token);
+            authManager.login(response.data.token);
             this.props.history.push('/app');
         } catch (err) {
             message.error("There was a problem with the login, check your credentials.");
+            this.setState({ waiting_response: false });
         }
     };
 
@@ -41,7 +46,7 @@ class Authentication extends Component {
                                 <Input.Password placeholder="Password" visibilityToggle="true" onChange={e => this.setState({ password: e.target.value })}/>
                             </Form.Item>
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" block="true">
+                                <Button type="primary" htmlType="submit" block="true" loading={ this.state.waiting_response }>
                                     <LoginOutlined /> Log In
                                 </Button>
                             </Form.Item>

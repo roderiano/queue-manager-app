@@ -7,7 +7,7 @@ import {
   LogoutOutlined,
   SettingOutlined
 } from '@ant-design/icons';
-import { logout } from './../services/auth'
+import AuthenticationManager from './../services/auth'
 
 
 const { Content, Footer, Sider } = Layout;
@@ -29,11 +29,12 @@ class AppLayout extends React.Component {
 
     handleLogoutConfirm = () => {
         this.setState({ confirmLogoutLoading: true, });
+        let authManager = new AuthenticationManager();
         
         setTimeout(() => {
           this.setState({ modalLogoutVisible: false, confirmLogoutLoading: false, });
-          logout();
-            this.props.history.push('/auth')
+          authManager.logout();
+          this.props.history.push('/auth');
         }, 1000);
 
     };
