@@ -10,7 +10,7 @@ const Main = () => {
   let authManager = new AuthenticationManager();
   
   return (
-    <Switch> {/* The Switch decides which component to show based on the current URL.*/}
+    <Switch>
       <Route path="/app">
         { authManager.isAuthenticated() ? <AppCore /> : <Redirect to="/auth" /> }
       </Route>

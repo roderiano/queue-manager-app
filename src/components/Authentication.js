@@ -25,7 +25,7 @@ class Authentication extends Component {
 
             this.setState({ waiting_response: true });
             const response = await api.post("token-auth/", { username, password });
-            authManager.login(response.data.token);
+            await authManager.login(response.data.token);
             this.props.history.push('/app');
         } catch (err) {
             message.error("There was a problem with the login, check your credentials.");
@@ -47,7 +47,7 @@ class Authentication extends Component {
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" block="true" loading={ this.state.waiting_response }>
-                                    <LoginOutlined /> Log In
+                                    <LoginOutlined /> Login
                                 </Button>
                             </Form.Item>
                         </Form>

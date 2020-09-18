@@ -20,15 +20,11 @@ export class User {
     }
 
     deserialize(json) {
-        console.log(json);
-        var data = JSON.parse(json); // Parsing the json string.
         
-        this.id = data.id;
-        this.email = data.email;
-        this.username = data.username;
-        this.first_name = data.first_name;
-        this.last_name = data.last_name;
-        this.is_superuser = data.is_superuser;
+        const obj = JSON.parse(json);
+        var user = new User(obj.id , obj.username , obj.first_name , obj.last_name , obj.email , obj.is_superuser);
+
+        return user;
     }
 }
 

@@ -2,11 +2,6 @@ import api from './api'
 import User from '../models/user'
 
 export class AuthenticationManager {
-
-  constructor() {
-    this.token = localStorage.getItem("token");
-    this.user = localStorage.getItem("user");
-  }
   
   async login(token) {
     // Set token for build header in request  
@@ -30,7 +25,7 @@ export class AuthenticationManager {
   getUser = () => {
     let data = localStorage.getItem("user");
     let user = new User();
-    user.deserialize(data);
+    user = user.deserialize(data);
 
     return user;
   }

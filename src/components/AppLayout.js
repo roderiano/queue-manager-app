@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, Modal, Typography } from 'antd';
+import { Layout, Menu, Modal, Typography, } from 'antd';
 import { withRouter } from 'react-router-dom';
 import {
   PieChartOutlined,
@@ -10,12 +10,16 @@ import {
 import AuthenticationManager from '../services/auth'
 
 
-const { Content, Footer, Sider } = Layout;
-const { Title } = Typography;
+const { Content, Footer, Sider, } = Layout;
+const { Title, } = Typography;
 const { SubMenu } = Menu;
 
 class AppLayout extends React.Component {
-
+    
+    constructor(props) {
+        super(props);
+        this.authManager = new AuthenticationManager();
+    }
 
     state = {
         siderCollapsed: true,
@@ -39,7 +43,7 @@ class AppLayout extends React.Component {
 
     };
 
-    handleLogoutCancel = e => {
+    handleLogoutCancel = () => {
         this.setState({ modalLogoutVisible: false, });
     };
     
@@ -49,26 +53,26 @@ class AppLayout extends React.Component {
   
     render () {
         return (
-            <Layout style={{ minHeight: '100vh' }}>
+            <Layout style={{ minHeight: '100vh' }} >
                 <Sider collapsible collapsed={this.state.siderCollapsed} onCollapse={this.onSiderCollapse}>
                     <div className="logo"/>
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1" icon={<ClockCircleOutlined />}>
                             Tokens
                         </Menu.Item>
-                        <Menu.Item key="2" icon={<PieChartOutlined />}>
+                        <Menu.Item key="2" icon={<PieChartOutlined />} disabled={ !this.authManager.getUser().is_superuser }>
                             Dashboard
                         </Menu.Item>
                         
-                        <SubMenu key="sub2" icon={<SettingOutlined />} title="Settings">
+                        <SubMenu key="sub2" icon={<SettingOutlined />} title="Settings" disabled={ !this.authManager.getUser().is_superuser }>
                             <Menu.Item key="3">Users</Menu.Item>
                             <Menu.Item key="4">Services</Menu.Item>
                             <Menu.Item key="5">Departments</Menu.Item>
                         </SubMenu>
                         <Menu.Item key="6" icon={<LogoutOutlined />} onClick={this.showLogoutModal}>
-                            Logout
+                            Logout {"(" + this.authManager.getUser().username + ")"}
                         </Menu.Item>
-                    </Menu>
+                    </Menu> 
                 </Sider>
 
                 <Layout className="site-layout">
@@ -86,6 +90,7 @@ class AppLayout extends React.Component {
                     <Footer style={{ textAlign: 'center' }}>Queue Manager ©2020 Created by Gabriel Silveira</Footer>
                 </Layout>
             </Layout>
+            
         );
     };
   
