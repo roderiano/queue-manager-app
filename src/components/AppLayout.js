@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layout, Menu, Modal, Typography, } from 'antd';
-import { withRouter } from 'react-router-dom';
 import {
   PieChartOutlined,
   ClockCircleOutlined,
@@ -8,9 +7,13 @@ import {
   SettingOutlined
 } from '@ant-design/icons';
 import AuthenticationManager from '../services/auth'
+import { Switch, Route, Link, withRouter, } from "react-router-dom";
+import DepartmentList from './modules/departments/DepartmentList'
+import UserList from './modules/users/UserList'
+import ServiceList from './modules/services/ServiceList'
 
 
-const { Content, Footer, Sider, } = Layout;
+const { Content, Footer, Sider, Header, } = Layout;
 const { Title, } = Typography;
 const { SubMenu } = Menu;
 
@@ -25,6 +28,7 @@ class AppLayout extends React.Component {
         siderCollapsed: true,
         modalLogoutVisible: false,
         confirmLogoutLoading: false,
+        activedModule: null,
     };
 
     showLogoutModal = () => {
@@ -46,6 +50,10 @@ class AppLayout extends React.Component {
     handleLogoutCancel = () => {
         this.setState({ modalLogoutVisible: false, });
     };
+
+    activeModule = (module) => {
+        this.setState({ activedModule: module, });
+    };
     
     onSiderCollapse = siderCollapsed => {
         this.setState({ siderCollapsed });
@@ -55,7 +63,7 @@ class AppLayout extends React.Component {
         return (
             <Layout style={{ minHeight: '100vh' }} >
                 <Sider collapsible collapsed={this.state.siderCollapsed} onCollapse={this.onSiderCollapse}>
-                    <div className="logo"/>
+                    <div className="logo" />
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1" icon={<ClockCircleOutlined />}>
                             Tokens
@@ -65,10 +73,22 @@ class AppLayout extends React.Component {
                         </Menu.Item>
                         
                         <SubMenu key="sub2" icon={<SettingOutlined />} title="Settings" disabled={ !this.authManager.getUser().is_superuser }>
-                            <Menu.Item key="3">Users</Menu.Item>
-                            <Menu.Item key="4">Services</Menu.Item>
-                            <Menu.Item key="5">Departments</Menu.Item>
+                            <Menu.Item key="3">
+                                Users
+                                <Link to="/app/users" />
+                            </Menu.Item>
+
+                            <Menu.Item key="4">
+                                Services
+                                <Link to="/app/services" />
+                            </Menu.Item>
+
+                            <Menu.Item key="5">
+                                Departments
+                                <Link to="/app/departments" />
+                            </Menu.Item>
                         </SubMenu>
+
                         <Menu.Item key="6" icon={<LogoutOutlined />} onClick={this.showLogoutModal}>
                             Logout {"(" + this.authManager.getUser().username + ")"}
                         </Menu.Item>
@@ -76,17 +96,25 @@ class AppLayout extends React.Component {
                 </Sider>
 
                 <Layout className="site-layout">
-                    <Content style={{ margin: '0 16px' }}>
-                        <Modal okText="Confirm" 
+                    <Modal okText="Confirm" 
                         title={<Title level={5}>CONFIRM LOGOUT</Title>} 
                         visible={this.state.modalLogoutVisible} 
                         onOk={this.handleLogoutConfirm} 
                         onCancel={this.handleLogoutCancel}
                         confirmLoading={this.state.confirmLogoutLoading} >
                             <p>Do you really want to leave the system?</p>
-                        </Modal>
-                        
+                    </Modal>
+
+                    <Header className="header-layout" />
+
+                    <Content className="content-layout" >
+                        <Switch>
+                            <Route path="/app/users" component={UserList} />
+                            <Route path="/app/services" component={ServiceList} />
+                            <Route path="/app/departments" component={DepartmentList} />
+                        </Switch> 
                     </Content>
+
                     <Footer style={{ textAlign: 'center' }}>Queue Manager ©2020 Created by Gabriel Silveira</Footer>
                 </Layout>
             </Layout>
