@@ -17,7 +17,7 @@ class Authentication extends Component {
     };
 
 
-    handleAuthenticate = async e => {
+    authenticate = async e => {
         const { username, password } = this.state;
 
         try {
@@ -26,7 +26,7 @@ class Authentication extends Component {
             this.setState({ waiting_response: true });
             const response = await api.post("token-auth/", { username, password });
             await authManager.login(response.data.token);
-            this.props.history.push('/app');
+            this.props.history.push('/');
         } catch (err) {
             message.error("There was a problem with the login, check your credentials.");
             this.setState({ waiting_response: false });
@@ -38,7 +38,7 @@ class Authentication extends Component {
             <Row type="flex" justify="center" align="middle" style={{height: '50%'}}>
                 <Space direction="vertical" style={{ width: '30%', height:'100%', textAlign: 'center' }}>
                         <Card title={<Title level={5}>USER AUTHENTICATION</Title>} style={{ width: '100%', height:'100%', marginTop: '50%'}}>
-                        <Form onFinish={this.handleAuthenticate}>
+                        <Form onFinish={this.authenticate}>
                             <Form.Item name="username" rules={[{ required: true, message: 'Please input your username.'}]}>
                                 <Input placeholder="Username" autoComplete="off" autoFocus="enabled" onChange={e => this.setState({ username: e.target.value })}/>
                             </Form.Item>

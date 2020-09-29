@@ -42,7 +42,7 @@ class AppLayout extends React.Component {
         setTimeout(() => {
           this.setState({ modalLogoutVisible: false, confirmLogoutLoading: false, });
           authManager.logout();
-          this.props.history.push('/auth');
+          this.props.history.push('/');
         }, 1000);
 
     };
@@ -75,17 +75,17 @@ class AppLayout extends React.Component {
                         <SubMenu key="sub2" icon={<SettingOutlined />} title="Settings" disabled={ !this.authManager.getUser().is_superuser }>
                             <Menu.Item key="3">
                                 Users
-                                <Link to="/app/users" />
+                                <Link to="/users" />
                             </Menu.Item>
 
                             <Menu.Item key="4">
                                 Services
-                                <Link to="/app/services" />
+                                <Link to="/services" />
                             </Menu.Item>
 
                             <Menu.Item key="5">
                                 Departments
-                                <Link to="/app/departments" />
+                                <Link to="/departments" />
                             </Menu.Item>
                         </SubMenu>
 
@@ -109,9 +109,9 @@ class AppLayout extends React.Component {
 
                     <Content className="content-layout" >
                         <Switch>
-                            <Route path="/app/users" component={UserList} />
-                            <Route path="/app/services" component={ServiceList} />
-                            <Route path="/app/departments" component={DepartmentList} />
+                            <Route path="/users" component={UserList} />
+                            <Route path="/services" component={ServiceList} />
+                            <Route path="/departments" component={DepartmentList} />
                         </Switch> 
                     </Content>
 

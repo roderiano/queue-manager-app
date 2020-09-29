@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import { Route, withRouter, } from 'react-router-dom';
 
 import Authentication from './Authentication';
 import AuthenticationManager from "./../services/auth";
@@ -10,15 +10,9 @@ const Main = () => {
   let authManager = new AuthenticationManager();
   
   return (
-    <Switch>
-      <Route path="/app">
-        { authManager.isAuthenticated() ? <AppCore /> : <Redirect to="/auth" /> }
-      </Route>
-      
-      <Route path="/auth">
-        { !authManager.isAuthenticated() ? <Authentication /> : <Redirect to="/app" /> }
-      </Route>
-    </Switch>
+    <Route path="/">
+      { authManager.isAuthenticated() ? <AppCore /> : <Authentication /> }
+    </Route>
   );
 
 }
