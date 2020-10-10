@@ -11,6 +11,7 @@ import { Switch, Route, Link, withRouter } from "react-router-dom";
 import DepartmentList from './departments/DepartmentList'
 import UserList from './users/UserList'
 import ServiceList from './services/ServiceList'
+import ServiceForm from './services/ServiceForm'
 
 
 const { Content, Footer, Sider, Header, } = Layout;
@@ -68,6 +69,7 @@ class AppTemplate extends React.Component {
                         <Menu.Item key="1" icon={<ClockCircleOutlined />}>
                             Tokens
                         </Menu.Item>
+
                         <Menu.Item key="2" icon={<PieChartOutlined />} disabled={ !this.authManager.getUser().is_superuser }>
                             Dashboard
                         </Menu.Item>
@@ -109,10 +111,13 @@ class AppTemplate extends React.Component {
 
                     <Content className="content-layout" >
                             <Switch>
-                                <Route path="/users" component={UserList} />
-                                <Route path="/services" component={ServiceList} />
-                                <Route path="/services" component={ServiceList} />
-                                <Route path="/departments" component={DepartmentList} />
+                                <Route exact path="/users" component={ UserList } />
+
+                                <Route exact path="/services" component={ () => <ServiceList /> } />
+                                <Route exact path="/services/service"  component={ () => <ServiceForm method="create" /> } />
+                                <Route exact path="/services/service/:id" render={ ({match}) => ( <ServiceForm id={ match.params.id } method="update" /> ) } />
+
+                                <Route exact path="/departments" component={DepartmentList} />
                             </Switch> 
                     </Content>
 

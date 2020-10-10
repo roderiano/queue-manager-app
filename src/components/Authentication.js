@@ -28,7 +28,12 @@ class Authentication extends Component {
             await authManager.login(response.data.token);
             this.props.history.push('/');
         } catch (err) {
-            message.error("There was a problem with the login, check your credentials.");
+            if (typeof err.response !== 'undefined') {
+                message.error(err.response.data.non_field_errors);
+            }
+            else {
+                message.error(err.message);   
+            }
             this.setState({ waiting_response: false });
         }
     };
