@@ -23,6 +23,12 @@ class ServiceForm extends React.Component {
         waiting_response: false,
     };
 
+    componentDidMount() {
+        if(this.props.method === "update") {
+            this.getService();   
+        }
+      }
+
     submit = async e => {
         const { name, } = this.state;
 
@@ -31,12 +37,13 @@ class ServiceForm extends React.Component {
             this.setState({ waiting_response: true });
             if(this.props.method === "create")
             {
-                let response = await api.post("services/", { name,  });
+                let response = await api.post("services/", { name, });
                 message.success("Service \"" + response.data.name + "\" was created successfully.");
             }
             else if(this.props.method === "update")
             {
-                message.error("funçao nao implementada");    
+                let response = await api.put("services/" + this.props.match.params.id + "/", { name, });
+                message.success("Service \"" + response.data.name + "\" was updated successfully.");
             }
             
             this.props.history.push('/services');
@@ -52,19 +59,34 @@ class ServiceForm extends React.Component {
         }
     };
 
+    getService = async e => {
+        try {
+            let response = await api.get("services/" + this.props.match.params.id  + "/");
+            console.log(response);
+            this.setState({ id: response.data.id, name: response.data.name })
+        } catch (err) {
+            if (typeof err.response !== 'undefined') {
+                    message.error(err.response.data.detail);
+            }
+            else {
+                message.error(err.message);   
+            }
+        }
+    };
+
     render () {
         return (
         <div className="list-container">
-            <Title level={2} >Services { this.props.match.params.id }</Title>
+            <Title level={2} >Services</Title>
             <Divider orientation="right" style={{ marginTop: 15, marginBottom: 30 }}></Divider>
             <Form className="form-container" onFinish={ this.submit }>
                 <div className="form-margin">
                     <Form.Item label="Id" {...layoutId}>
-                        <Input disabled={ true }/>
+                        <Input value={this.state.id}  disabled={ true }/>
                     </Form.Item>
 
                     <Form.Item label="Name" {...layoutName}>
-                        <Input onChange={e => this.setState({ name: e.target.value })}/>
+                        <Input value={this.state.name} onChange={e => this.setState({ name: e.target.value })}/>
                     </Form.Item>
 
                     <Form.Item style={{ float: 'right', marginTop: 10 }}>

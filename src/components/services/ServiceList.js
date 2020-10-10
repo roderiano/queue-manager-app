@@ -22,7 +22,9 @@ const columns = [
         key: 'action',
         render: (record) => (
           <Space size="middle">
-                <Button icon={ <EditOutlined /> } size="small" type="primary">Edit</Button>
+                <Link to={ "/services/service/" + record.id } >
+                    <Button icon={ <EditOutlined /> } size="small" type="primary">Edit</Button>
+                </Link>
                 <Button icon={ <DeleteOutlined /> } size="small" type="danger">Delete</Button>
           </Space>
         ),
