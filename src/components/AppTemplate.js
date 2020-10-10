@@ -7,17 +7,17 @@ import {
   SettingOutlined
 } from '@ant-design/icons';
 import AuthenticationManager from '../services/auth'
-import { Switch, Route, Link, withRouter, } from "react-router-dom";
-import DepartmentList from './modules/departments/DepartmentList'
-import UserList from './modules/users/UserList'
-import ServiceList from './modules/services/ServiceList'
+import { Switch, Route, Link, withRouter } from "react-router-dom";
+import DepartmentList from './departments/DepartmentList'
+import UserList from './users/UserList'
+import ServiceList from './services/ServiceList'
 
 
 const { Content, Footer, Sider, Header, } = Layout;
 const { Title, } = Typography;
 const { SubMenu } = Menu;
 
-class AppLayout extends React.Component {
+class AppTemplate extends React.Component {
     
     constructor(props) {
         super(props);
@@ -108,11 +108,12 @@ class AppLayout extends React.Component {
                     <Header className="header-layout" />
 
                     <Content className="content-layout" >
-                        <Switch>
-                            <Route path="/users" component={UserList} />
-                            <Route path="/services" component={ServiceList} />
-                            <Route path="/departments" component={DepartmentList} />
-                        </Switch> 
+                            <Switch>
+                                <Route path="/users" component={UserList} />
+                                <Route path="/services" component={ServiceList} />
+                                <Route path="/services" component={ServiceList} />
+                                <Route path="/departments" component={DepartmentList} />
+                            </Switch> 
                     </Content>
 
                     <Footer style={{ textAlign: 'center' }}>Queue Manager ©2020 Created by Gabriel Silveira</Footer>
@@ -124,4 +125,4 @@ class AppLayout extends React.Component {
   
   }
 
-  export default withRouter(AppLayout);
+  export default withRouter(AppTemplate);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter, } from 'react-router-dom';
 import { message, Table, Typography, Button, Divider, Space } from 'antd';
-import api from '../../../services/api';
+import api from '../../services/api';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const columns = [
