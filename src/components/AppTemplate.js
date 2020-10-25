@@ -8,10 +8,11 @@ import {
 } from '@ant-design/icons';
 import AuthenticationManager from '../services/auth'
 import { Switch, Route, Link, withRouter } from "react-router-dom";
-import DepartmentList from './departments/DepartmentList'
 import UserList from './users/UserList'
 import ServiceList from './services/ServiceList'
 import ServiceForm from './services/ServiceForm'
+import DepartmentList from './departments/DepartmentList'
+import DepartmentForm from './departments/DepartmentForm'
 
 
 const { Content, Footer, Sider, Header, } = Layout;
@@ -117,7 +118,9 @@ class AppTemplate extends React.Component {
                                 <Route exact path="/services/service"  component={ () => <ServiceForm method="create" /> } />
                                 <Route exact path="/services/service/:id" render={ ({match}) => ( <ServiceForm id={ match.params.id } method="update" /> ) } />
 
-                                <Route exact path="/departments" component={DepartmentList} />
+                                <Route exact path="/departments" component={ () => <DepartmentList /> } />
+                                <Route exact path="/departments/department"  component={ () => <DepartmentForm method="create" /> } />
+                                <Route exact path="/departments/department/:id" render={ ({match}) => ( <DepartmentForm id={ match.params.id } method="update" /> ) } />
                             </Switch> 
                     </Content>
 

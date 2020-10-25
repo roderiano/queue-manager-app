@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { message, Table, Typography, Button, Divider, Space, Modal, Popconfirm } from 'antd';
+import { message, Table, Typography, Button, Divider, Space, Popconfirm } from 'antd';
 import api from '../../services/api';
 import { PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
@@ -29,7 +29,7 @@ class ServiceList extends React.Component {
                             <Button icon={ <EditOutlined /> } size="small" type="primary">Edit</Button>
                         </Link>
                         
-                        <Popconfirm title="Are you sure?" icon={<QuestionCircleOutlined style={{ color: 'red' }} />} onConfirm={() => this.delete(record.id, record.name)}>
+                        <Popconfirm title="Are you sure?" icon={<QuestionCircleOutlined style={{ color: 'red' }} />} onConfirm={() => this.deleteService(record.id, record.name)}>
                         <Button icon={ <DeleteOutlined /> } size="small" type="danger">Delete</Button>
                         </Popconfirm>
                   </Space>
@@ -83,7 +83,7 @@ class ServiceList extends React.Component {
         }
     }
 
-    delete = async (id, name) => {
+    deleteService = async (id, name) => {
         try {
             let response = await api.delete("services/" + id + "/",);
 
@@ -101,7 +101,7 @@ class ServiceList extends React.Component {
             else {
                 message.error(err.message);   
             }
-            
+
             this.setState({ waitingResponse: false });
         }
     }
