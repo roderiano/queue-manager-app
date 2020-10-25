@@ -5,7 +5,6 @@ import api from '../../services/api';
 import { PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 const { Title, } = Typography
-const { confirm, } = Modal;
 
 class ServiceList extends React.Component {
 
@@ -43,11 +42,11 @@ class ServiceList extends React.Component {
 
     state  = {
         servicesData: [],
-        waiting_response: true,
+        waitingResponse: true,
         modalDeleteVisible: false,
-        delete_id: null,
-        delete_name: "",
-        delete_modal_visible: false,
+        deleteId: null,
+        deleteName: "",
+        deleteModalVisible: false,
     }
 
     componentDidMount = () => {  
@@ -56,38 +55,54 @@ class ServiceList extends React.Component {
 
     showDeleteModal = (id, name) => {
         this.setState({
-            delete_id: id,
-            delete_name: name,
-            delete_modal_visible: true,
+            deleteId: id,
+            deleteName: name,
+            deleteModalVisible: true,
         });
     };
 
     getServices = async e => {
         try {
-            this.setState({ waiting_response: true });
+            this.setState({ waitingResponse: true });
+
             let response = await api.get("services/");
             this.setState({ servicesData: response.data });
-            this.setState({ waiting_response: false });
+            this.setState({ waitingResponse: false });
         } catch (err) {
-            message.error("There was a communication problem with the service, try again.");
-            this.setState({ waiting_response: false });
+            if (err.response) {
+                Object.keys(err.response.data).map(function(keyName) {
+                    message.error(keyName + ": " + err.response.data[keyName]);  
+                    return keyName;
+                }) 
+            }
+            else {
+                message.error(err.message);   
+            }
+            
+            this.setState({ waitingResponse: false });
         }
     }
 
     delete = async (id, name) => {
         try {
             let response = await api.delete("services/" + id + "/",);
-            message.success('Service "' + name + '" was deleted successfully.');
-            this.props.history.push('/services');
+
+            if(response.status === 204) {
+                message.success('Service "' + name + '" was deleted successfully.');
+                this.props.history.push('/services');   
+            }
         } catch (err) {
-            if (typeof err.response !== 'undefined') {
-                if (err.response.data.detail !== 'undefined')
-                    message.error(err.response.data.name);
+            if (err.response) {
+                Object.keys(err.response.data).map(function(keyName) {
+                    message.error(keyName + ": " + err.response.data[keyName]);  
+                    return keyName;
+                }) 
             }
             else {
                 message.error(err.message);   
             }
-            this.setState({ waiting_response: false });
+            
+            this.setState({ waitingResponse: false });
         }
     }
 
@@ -105,7 +120,7 @@ class ServiceList extends React.Component {
                 columns={ this.columns } 
                 bordered={ true } 
                 size="middle" 
-                loading={ this.state.waiting_response } 
+                loading={ this.state.waitingResponse } 
             />
         </div>)
     }

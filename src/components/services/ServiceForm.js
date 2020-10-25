@@ -20,7 +20,7 @@ class ServiceForm extends React.Component {
 
     state = {
         name: "",
-        waiting_response: false,
+        waitingResponse: false,
     };
 
     componentDidMount() {
@@ -33,40 +33,52 @@ class ServiceForm extends React.Component {
         const { name, } = this.state;
 
         try {
+            let response;
+            this.setState({ waitingResponse: true });
 
-            this.setState({ waiting_response: true });
-            if(this.props.method === "create")
-            {
-                let response = await api.post("services/", { name, });
-                message.success("Service \"" + response.data.name + "\" was created successfully.");
+            if(this.props.method === "create") {
+                response = await api.post("services/", { name, });
+
+                if(response.status === 201) {
+                    message.success("Service \"" + response.data.name + "\" was created successfully.");
+                    this.props.history.push("/services");
+                }
             }
-            else if(this.props.method === "update")
-            {
-                let response = await api.put("services/" + this.props.match.params.id + "/", { name, });
-                message.success("Service \"" + response.data.name + "\" was updated successfully.");
+            else if(this.props.method === "update") {
+                response = await api.put("services/" + this.props.match.params.id + "/", { name, });
+
+                if(response.status === 200) {
+                    message.success("Service \"" + response.data.name + "\" was updated successfully.");
+                    this.props.history.push("/services");
+                }
             }
-            
-            this.props.history.push('/services');
-        } catch (err) {
-            if (typeof err.response !== 'undefined') {
-                if (err.response.data.name !== 'undefined')
-                    message.error("Name: " + err.response.data.name);
+        } catch (err) { 
+            if (err.response) {
+                Object.keys(err.response.data).map(function(keyName) {
+                    message.error(keyName + ": " + err.response.data[keyName]);  
+                    return keyName;
+                }) 
             }
             else {
                 message.error(err.message);   
             }
-            this.setState({ waiting_response: false });
+
+            this.setState({ waitingResponse: false });
         }
     };
 
     getService = async e => {
         try {
             let response = await api.get("services/" + this.props.match.params.id  + "/");
-            console.log(response);
-            this.setState({ id: response.data.id, name: response.data.name })
+            if(response.status === 200) {
+                this.setState({ id: response.data.id, name: response.data.name });
+            }
         } catch (err) {
-            if (typeof err.response !== 'undefined') {
-                    message.error(err.response.data.detail);
+            if (err.response) {
+                Object.keys(err.response.data).map(function(keyName) {
+                    message.error(keyName + ": " + err.response.data[keyName]);  
+                    return keyName;
+                }) 
             }
             else {
                 message.error(err.message);   
@@ -98,7 +110,7 @@ class ServiceForm extends React.Component {
                             </Link>
                         </Form.Item>
                         <Form.Item style={{ display: 'inline-block', marginLeft: 10 }}>
-                            <Button type="primary" htmlType="submit" loading={ this.state.waiting_response }>
+                            <Button type="primary" htmlType="submit" loading={ this.state.waitingResponse }>
                                 <SaveOutlined /> Save
                             </Button>
                         </Form.Item>
