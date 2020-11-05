@@ -40,7 +40,7 @@ class UserForm extends React.Component {
             if(this.props.method === "create") {
                 response = await api.post("users/", { username, password, first_name, last_name, email, is_superuser, place });
 
-                if(response.status === 201) {
+                if(response.status === 200) {
                     message.success("User \"" + response.data.username + "\" was created successfully.");
                     this.props.history.push("/users");
                 }
@@ -79,8 +79,12 @@ class UserForm extends React.Component {
                                 last_name: response.data.last_name, 
                                 email: response.data.email, 
                                 is_superuser: response.data.is_superuser, 
-                                place: response.data.place, 
                             });
+            }
+
+            response = await api.get("users/" + this.props.match.params.id  + "/profile/");
+            if(response.status === 200) {
+                this.setState({ place: response.data[0].place, });
             }
         } catch (err) {
             if (err.response) {

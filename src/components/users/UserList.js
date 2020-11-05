@@ -13,14 +13,12 @@ class UserList extends React.Component {
         this.columns = [
             {
               title: 'Id',
-              key: 'id',
               dataIndex: 'id',
               width: '5%',
               align: 'center',
             },
             {
                 title: 'Username',
-                key: 'username',
                 dataIndex: 'username',
             },
             {
@@ -31,7 +29,7 @@ class UserList extends React.Component {
                             <Button icon={ <EditOutlined /> } size="small" type="primary">Edit</Button>
                         </Link>
                         
-                        <Popconfirm title="Are you sure?" icon={<QuestionCircleOutlined style={{ color: 'red' }} />} onConfirm={() => this.deleteUser(record.id, record.name)}>
+                        <Popconfirm title="Are you sure?" icon={<QuestionCircleOutlined style={{ color: 'red' }} />} onConfirm={() => this.deleteUser(record.id, record.username)}>
                         <Button icon={ <DeleteOutlined /> } size="small" type="danger">Delete</Button>
                         </Popconfirm>
                   </Space>
@@ -85,12 +83,12 @@ class UserList extends React.Component {
         }
     }
 
-    deleteUser = async (id, name) => {
+    deleteUser = async (id, username) => {
         try {
             let response = await api.delete("users/" + id + "/",);
 
             if(response.status === 204) {
-                message.success('User "' + name + '" was deleted successfully.');
+                message.success('User "' + username + '" was deleted successfully.');
                 this.props.history.push('/users');   
             }
         } catch (err) {

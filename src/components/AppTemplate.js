@@ -113,8 +113,6 @@ class AppTemplate extends React.Component {
 
                     <Content className="content-layout" >
                             <Switch>
-                                <Route exact path="/users" component={ UserList } />
-
                                 <Route exact path="/services" component={ () => <ServiceList /> } />
                                 <Route exact path="/services/service"  component={ () => <ServiceForm method="create" /> } />
                                 <Route exact path="/services/service/:id" render={ ({match}) => ( <ServiceForm id={ match.params.id } method="update" /> ) } />

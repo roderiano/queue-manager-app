@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { message, Table, Typography, Button, Divider, Space, Popconfirm } from 'antd';
 import api from '../../services/api';
-import { PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined, } from '@ant-design/icons';
 
 const { Title, } = Typography
 
