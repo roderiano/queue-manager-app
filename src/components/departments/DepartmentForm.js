@@ -32,8 +32,8 @@ class DepartmentForm extends React.Component {
     };
 
     componentDidMount() {
-            this.getDepartment();
-      }
+        this.getDepartment();
+    }
 
     submitDepartment = async e => {
         const { name, available_services } = this.state;

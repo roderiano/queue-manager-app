@@ -121,6 +121,7 @@ class ServiceList extends React.Component {
                 bordered={ true } 
                 size="middle" 
                 loading={ this.state.waitingResponse } 
+                rowKey="id"
             />
         </div>)
     }

@@ -27,7 +27,7 @@ class ServiceForm extends React.Component {
         if(this.props.method === "update") {
             this.getService();   
         }
-      }
+    }
 
     submitService = async e => {
         const { name, } = this.state;

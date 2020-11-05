@@ -110,7 +110,7 @@ class DepartmentList extends React.Component {
     render () {
         return (
         <div className="list-container">
-            <Title level={2} style={{ marginBottom: 0 }}>Department</Title>
+            <Title level={2} style={{ marginBottom: 0 }}>Departments</Title>
             <Divider orientation="right" style={{ marginTop: 0 }}>
                 <Link to="/departments/department" >
                     <Button icon={<PlusOutlined /> } shape="round">Create Service</Button>
@@ -121,7 +121,8 @@ class DepartmentList extends React.Component {
                 columns={ this.columns } 
                 bordered={ true } 
                 size="middle" 
-                loading={ this.state.waitingResponse } 
+                loading={ this.state.waitingResponse }
+                rowKey="id"  
             />
         </div>)
     }
