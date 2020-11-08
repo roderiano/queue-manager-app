@@ -66,8 +66,8 @@ class UserList extends React.Component {
             this.setState({ waitingResponse: true });
 
             let response = await api.get("users/");
-            this.setState({ usersData: response.data });
-            this.setState({ waitingResponse: false });
+            await this.setState({ usersData: response.data });
+            await this.setState({ waitingResponse: false });
         } catch (err) {
             if (err.response) {
                 Object.keys(err.response.data).map(function(keyName) {
@@ -79,7 +79,7 @@ class UserList extends React.Component {
                 message.error(err.message);   
             }
             
-            this.setState({ waitingResponse: false });
+            await this.setState({ waitingResponse: false });
         }
     }
 
@@ -102,7 +102,7 @@ class UserList extends React.Component {
                 message.error(err.message);   
             }
 
-            this.setState({ waitingResponse: false });
+            await this.setState({ waitingResponse: false });
         }
     }
 

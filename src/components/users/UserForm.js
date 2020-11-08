@@ -35,7 +35,7 @@ class UserForm extends React.Component {
 
         try {
             let response;
-            this.setState({ waitingResponse: true });
+            await this.setState({ waitingResponse: true });
 
             if(this.props.method === "create") {
                 response = await api.post("users/", { username, password, first_name, last_name, email, is_superuser, place });
@@ -64,7 +64,7 @@ class UserForm extends React.Component {
                 message.error(err.message);   
             }
 
-            this.setState({ waitingResponse: false });
+            await this.setState({ waitingResponse: false });
         }
     };
 
@@ -73,18 +73,18 @@ class UserForm extends React.Component {
             let response = await api.get("users/" + this.props.match.params.id  + "/");
             if(response.status === 200) {
                 this.setState({ id: response.data.id,
-                                username: response.data.username, 
-                                password: response.data.password, 
-                                first_name: response.data.first_name, 
-                                last_name: response.data.last_name, 
-                                email: response.data.email, 
-                                is_superuser: response.data.is_superuser, 
-                            });
+                                    username: response.data.username, 
+                                    password: response.data.password, 
+                                    first_name: response.data.first_name, 
+                                    last_name: response.data.last_name, 
+                                    email: response.data.email, 
+                                    is_superuser: response.data.is_superuser, 
+                                });
             }
 
             response = await api.get("users/" + this.props.match.params.id  + "/profile/");
             if(response.status === 200) {
-                this.setState({ place: response.data[0].place, });
+                await this.setState({ place: response.data[0].place, });
             }
         } catch (err) {
             if (err.response) {

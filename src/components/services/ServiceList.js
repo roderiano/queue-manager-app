@@ -63,11 +63,10 @@ class ServiceList extends React.Component {
 
     getServices = async e => {
         try {
-            this.setState({ waitingResponse: true });
+            await this.setState({ waitingResponse: true });
 
             let response = await api.get("services/");
-            this.setState({ servicesData: response.data });
-            this.setState({ waitingResponse: false });
+            await this.setState({ servicesData: response.data, waitingResponse: false });
         } catch (err) {
             if (err.response) {
                 Object.keys(err.response.data).map(function(keyName) {
@@ -79,7 +78,7 @@ class ServiceList extends React.Component {
                 message.error(err.message);   
             }
             
-            this.setState({ waitingResponse: false });
+            await this.setState({ waitingResponse: false });
         }
     }
 
@@ -102,7 +101,7 @@ class ServiceList extends React.Component {
                 message.error(err.message);   
             }
 
-            this.setState({ waitingResponse: false });
+            await this.setState({ waitingResponse: false });
         }
     }
 

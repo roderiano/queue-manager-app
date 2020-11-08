@@ -34,7 +34,7 @@ class ServiceForm extends React.Component {
 
         try {
             let response;
-            this.setState({ waitingResponse: true });
+            await this.setState({ waitingResponse: true });
 
             if(this.props.method === "create") {
                 response = await api.post("services/", { name, });
@@ -63,7 +63,7 @@ class ServiceForm extends React.Component {
                 message.error(err.message);   
             }
 
-            this.setState({ waitingResponse: false });
+            await this.setState({ waitingResponse: false });
         }
     };
 
@@ -71,7 +71,7 @@ class ServiceForm extends React.Component {
         try {
             let response = await api.get("services/" + this.props.match.params.id  + "/");
             if(response.status === 200) {
-                this.setState({ id: response.data.id, name: response.data.name });
+                await this.setState({ id: response.data.id, name: response.data.name });
             }
         } catch (err) {
             if (err.response) {

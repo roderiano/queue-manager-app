@@ -26,6 +26,7 @@ class DepartmentForm extends React.Component {
 
     state = {
         name: "",
+        code: "",
         available_services: [],
         servicesData: [],
         waitingResponse: false,
@@ -36,14 +37,14 @@ class DepartmentForm extends React.Component {
     }
 
     submitDepartment = async e => {
-        const { name, available_services } = this.state;
+        const { name, available_services, code } = this.state;
 
         try {
             let response;
-            this.setState({ waitingResponse: true });
+            await this.setState({ waitingResponse: true });
 
             if(this.props.method === "create") {
-                response = await api.post("departments/", { name, available_services });
+                response = await api.post("departments/", { name, available_services, code });
 
                 if(response.status === 201) {
                     message.success("Department \"" + response.data.name + "\" was created successfully.");
@@ -51,7 +52,7 @@ class DepartmentForm extends React.Component {
                 }
             }
             else if(this.props.method === "update") {
-                response = await api.put("departments/" + this.props.match.params.id + "/", { name, available_services });
+                response = await api.put("departments/" + this.props.match.params.id + "/", { name, available_services, code });
 
                 if(response.status === 200) {
                     message.success("Department \"" + response.data.name + "\" was updated successfully.");
@@ -69,7 +70,7 @@ class DepartmentForm extends React.Component {
                 message.error(err.message);   
             }
 
-            this.setState({ waitingResponse: false });
+            await this.setState({ waitingResponse: false });
         }
     };
 
@@ -79,14 +80,14 @@ class DepartmentForm extends React.Component {
 
             response = await api.get("services/");
             if(response.status === 200) {
-                this.setState({ servicesData: response.data });
+                await this.setState({ servicesData: response.data });
             }
 
             if(this.props.method === "update")
             {
                 response = await api.get("departments/" + this.props.match.params.id  + "/");
                 if(response.status === 200) {
-                    this.setState({ id: response.data.id, name: response.data.name, });
+                    await this.setState({ id: response.data.id, name: response.data.name, code: response.data.code,});
                 }
 
                 response = await api.get("departments/" + this.props.match.params.id  + "/available_services/");
@@ -98,7 +99,7 @@ class DepartmentForm extends React.Component {
                         services.push(response.data[key]["id"].toString());
                         return key;
                     })
-                    this.setState({ available_services: services, });
+                    await this.setState({ available_services: services, });
                 }
             }
         } catch (err) {
@@ -127,6 +128,10 @@ class DepartmentForm extends React.Component {
                 <div className="form-margin">
                     <Form.Item label="Id" {...layoutId}>
                         <Input value={this.state.id}  disabled={ true }/>
+                    </Form.Item>
+
+                    <Form.Item label="Code" {...layoutName}>
+                        <Input value={this.state.code} onChange={e => this.setState({ code: e.target.value })}/>
                     </Form.Item>
 
                     <Form.Item label="Name" {...layoutName}>

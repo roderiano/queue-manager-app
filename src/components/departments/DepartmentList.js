@@ -63,12 +63,10 @@ class DepartmentList extends React.Component {
 
     getDepartments = async e => {
         try {
-            this.setState({ waitingResponse: true });
+            await this.setState({ waitingResponse: true });
 
             let response = await api.get("departments/");
-            
-            this.setState({ departmentsData: response.data });
-            this.setState({ waitingResponse: false });
+            await this.setState({ departmentsData: response.data, waitingResponse: false });
         } catch (err) {
             if (err.response) {
                 Object.keys(err.response.data).map(function(keyName) {
@@ -80,7 +78,7 @@ class DepartmentList extends React.Component {
                 message.error(err.message);   
             }
             
-            this.setState({ waitingResponse: false });
+            await this.setState({ waitingResponse: false });
         }
     }
 
@@ -103,7 +101,7 @@ class DepartmentList extends React.Component {
                 message.error(err.message);   
             }
             
-            this.setState({ waitingResponse: false });
+            await this.setState({ waitingResponse: false });
         }
     }
 

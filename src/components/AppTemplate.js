@@ -4,7 +4,8 @@ import {
   PieChartOutlined,
   ClockCircleOutlined,
   LogoutOutlined,
-  SettingOutlined
+  SettingOutlined,
+  ApartmentOutlined
 } from '@ant-design/icons';
 import AuthenticationManager from '../services/auth'
 import { Switch, Route, Link, withRouter } from "react-router-dom";
@@ -76,7 +77,7 @@ class AppTemplate extends React.Component {
                             Dashboard
                         </Menu.Item>
                         
-                        <SubMenu key="sub2" icon={<SettingOutlined />} title="Settings" disabled={ !this.authManager.getUser().is_superuser }>
+                        <SubMenu key="sub1" icon={<SettingOutlined />} title="Settings" disabled={ !this.authManager.getUser().is_superuser }>
                             <Menu.Item key="3">
                                 Users
                                 <Link to="/users" />
@@ -93,7 +94,19 @@ class AppTemplate extends React.Component {
                             </Menu.Item>
                         </SubMenu>
 
-                        <Menu.Item key="6" icon={<LogoutOutlined />} onClick={this.showLogoutModal}>
+                        <SubMenu key="sub2" icon={<ApartmentOutlined />} title="Modules" disabled={ !this.authManager.getUser().is_superuser }>
+                            <Menu.Item key="6">
+                                Monitor
+                                <Link to="/monitor" />
+                            </Menu.Item>
+
+                            <Menu.Item key="7">
+                                Totem
+                                <Link to="/totem" />
+                            </Menu.Item>
+                        </SubMenu>
+
+                        <Menu.Item key="8" icon={<LogoutOutlined />} onClick={this.showLogoutModal}>
                             Logout {"(" + this.authManager.getUser().username + ")"}
                         </Menu.Item>
                     </Menu> 
