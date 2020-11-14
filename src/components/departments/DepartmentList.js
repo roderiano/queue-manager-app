@@ -13,24 +13,24 @@ class DepartmentList extends React.Component {
         this.columns = [
             {
               title: 'Id',
-              dataIndex: 'id',
+              dataIndex: ['department', 'id'],
               width: '5%',
               align: 'center',
             },
             {
                 title: 'Name',
-                dataIndex: 'name',
+                dataIndex: ['department', 'name'],
             },
             {
                 title: 'Action',
                 render: (record) => (
                   <Space size="middle">
-                        <Link to={ "/departments/department/" + record.id } >
+                        <Link to={ "/departments/department/" + record.department.id } >
                             <Button icon={ <EditOutlined /> } size="small" type="primary">Edit</Button>
                         </Link>
                         
-                        <Popconfirm title="Are you sure?" icon={<QuestionCircleOutlined style={{ color: 'red' }} />} onConfirm={() => this.deleteDepartment(record.id, record.name)}>
-                        <Button icon={ <DeleteOutlined /> } size="small" type="danger">Delete</Button>
+                        <Popconfirm title="Are you sure?" icon={<QuestionCircleOutlined style={{ color: 'red' }} />} onConfirm={() => this.deleteDepartment(record.department.id, record.department.name)}>
+                            <Button icon={ <DeleteOutlined /> } size="small" type="danger">Delete</Button>
                         </Popconfirm>
                   </Space>
                 ),
@@ -67,6 +67,7 @@ class DepartmentList extends React.Component {
 
             let response = await api.get("departments/");
             await this.setState({ departmentsData: response.data, waitingResponse: false });
+            console.log(this.state.departmentsData);
         } catch (err) {
             if (err.response) {
                 Object.keys(err.response.data).map(function(keyName) {
@@ -120,8 +121,8 @@ class DepartmentList extends React.Component {
                 bordered={ true } 
                 size="middle" 
                 loading={ this.state.waitingResponse }
-                rowKey="id"  
-            />
+                rowKey={record => record.department.id}
+            /> 
         </div>)
     }
 }

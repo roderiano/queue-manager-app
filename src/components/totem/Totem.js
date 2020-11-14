@@ -6,7 +6,7 @@ import api from '../../services/api';
 
 const { Title, } = Typography
 
-class Monitor extends React.Component {
+class Totem extends React.Component {
 
     state = {
         departmentsData: [],
@@ -91,7 +91,7 @@ class Monitor extends React.Component {
                 <div className={this.state.screen === "department" ? 'totem-container' : 'totem-container hidden'}>
                     <Title>SELECT DEPARTMENT</Title>
                     {
-                        this.state.departmentsData.map(department => <Button key={department.id} onClick={e => this.setDepartment(department.id)} className="totem-button" type="secondary" block>{department.name}</Button>)
+                        this.state.departmentsData.map(instance => <Button key={instance.department.id} onClick={e => this.setDepartment(instance.department.id)} className="totem-button" type="secondary" block>{instance.department.name}</Button>)
                     }
                 </div>
 
@@ -107,4 +107,4 @@ class Monitor extends React.Component {
     }
 }
 
-export default withRouter(Monitor);
+export default withRouter(Totem);

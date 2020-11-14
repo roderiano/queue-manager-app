@@ -11,6 +11,8 @@ import AuthenticationManager from '../services/auth'
 import { Switch, Route, Link, withRouter } from "react-router-dom";
 import ServiceList from './services/ServiceList'
 import ServiceForm from './services/ServiceForm'
+import DepartmentTokens from './tokens/DepartmentSelect'
+import TokenList from './tokens/TokenList'
 import DepartmentList from './departments/DepartmentList'
 import DepartmentForm from './departments/DepartmentForm'
 import UserList from './users/UserList'
@@ -71,6 +73,7 @@ class AppTemplate extends React.Component {
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1" icon={<ClockCircleOutlined />}>
                             Tokens
+                            <Link to="/tokens/department-select" />
                         </Menu.Item>
 
                         <Menu.Item key="2" icon={<PieChartOutlined />} disabled={ !this.authManager.getUser().is_superuser }>
@@ -126,6 +129,9 @@ class AppTemplate extends React.Component {
 
                     <Content className="content-layout" >
                             <Switch>
+                                <Route exact path="/tokens/department-select" component={ () => <DepartmentTokens /> } />
+                                <Route exact path="/tokens/:department" component={ ({match}) => <TokenList id={ match.params.department } /> } />
+
                                 <Route exact path="/services" component={ () => <ServiceList /> } />
                                 <Route exact path="/services/service"  component={ () => <ServiceForm method="create" /> } />
                                 <Route exact path="/services/service/:id" render={ ({match}) => ( <ServiceForm id={ match.params.id } method="update" /> ) } />

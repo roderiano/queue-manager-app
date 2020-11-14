@@ -66,8 +66,7 @@ class UserList extends React.Component {
             this.setState({ waitingResponse: true });
 
             let response = await api.get("users/");
-            await this.setState({ usersData: response.data });
-            await this.setState({ waitingResponse: false });
+            await this.setState({ usersData: response.data, waitingResponse: false });
         } catch (err) {
             if (err.response) {
                 Object.keys(err.response.data).map(function(keyName) {
