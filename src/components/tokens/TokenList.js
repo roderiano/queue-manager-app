@@ -52,7 +52,7 @@ class TokenList extends React.Component {
                 align: 'center',
                 width: '1%',
                 render: (record) => (
-                    <Button type="text" icon={<PlayCircleOutlined />} size={"large"}>
+                    <Button type="text" icon={<PlayCircleOutlined />} size={"large"} onClick={e => this.startAttendence(record.id)}>
                         Start Attendence
                     </Button>
                 )
@@ -76,9 +76,32 @@ class TokenList extends React.Component {
     getTokens = async e => {
         try {
             this.setState({ waitingResponse: true });
-
-            let response = await api.get("tokens/");
+            let response = await api.get("tokens?ordering=-token_type,issue_date&status=TIS&department=" + this.props.id);
             await this.setState({ tokensData: response.data, waitingResponse: false });
+        } catch (err) {
+            if (err.response) {
+                Object.keys(err.response.data).map(function(keyName) {
+                    message.error(keyName + ": " + err.response.data[keyName]);  
+                    return keyName;
+                }) 
+            }
+            else {
+                message.error(err.message);   
+            }
+            
+            await this.setState({ waitingResponse: false });
+        }
+    }
+
+    startAttendence = async (id) => {
+        try {
+            let response = await api.put("tokens/" + id + "/start_attendence/");
+
+            if(response.status === 200) 
+            {
+                message.success("Token \"" + response.data.key + "\" in attendence.");
+                this.props.history.push("/tokens/token/" + id);
+            }
         } catch (err) {
             if (err.response) {
                 Object.keys(err.response.data).map(function(keyName) {

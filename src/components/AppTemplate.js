@@ -17,6 +17,7 @@ import DepartmentList from './departments/DepartmentList'
 import DepartmentForm from './departments/DepartmentForm'
 import UserList from './users/UserList'
 import UserForm from './users/UserForm'
+import TokenForm from './tokens/TokenForm';
 
 
 const { Content, Footer, Sider, Header, } = Layout;
@@ -131,6 +132,7 @@ class AppTemplate extends React.Component {
                             <Switch>
                                 <Route exact path="/tokens/department-select" component={ () => <DepartmentTokens /> } />
                                 <Route exact path="/tokens/:department" component={ ({match}) => <TokenList id={ match.params.department } /> } />
+                                <Route exact path="/tokens/token/:id" render={ ({match}) => ( <TokenForm id={ match.params.id } /> ) } />
 
                                 <Route exact path="/services" component={ () => <ServiceList /> } />
                                 <Route exact path="/services/service"  component={ () => <ServiceForm method="create" /> } />

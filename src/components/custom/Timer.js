@@ -9,10 +9,10 @@ class Timer extends React.Component {
       super(p)
       this.interval = 1000
       this.startTime = new Date(p.ts)
+    }
 
-      this.state = {
-        timerText: ""
-      }
+    state = {
+      timerText: ""
     }
 
     componentDidMount() {
@@ -24,7 +24,7 @@ class Timer extends React.Component {
     }
 
     updateText = () => {
-        let duration = moment.utc(moment().diff(moment(this.startTime))); //.format("HH:mm:ss");
+        let duration = moment.utc(moment().diff(moment(this.startTime)));
         let days = parseInt(duration.format("D"));
 
         this.setState({timerText: days === 1 ? duration.format("HH:mm:ss") : days.toString() + "D " + duration.format("HH:mm:ss")});
