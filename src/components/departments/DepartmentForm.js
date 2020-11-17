@@ -1,26 +1,12 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { Typography, Form, Input, Divider, Button, message, Select, } from 'antd';
+import { Typography, Form, Input, Divider, Button, message, Select, Row, Col } from 'antd';
 import { SaveOutlined, CloseCircleOutlined, } from '@ant-design/icons';
 import api from '../../services/api';
 
 const { Title, } = Typography
 const { Option } = Select;
 
-const layoutId = {
-    labelCol: { span: 1 },
-    wrapperCol: { span: 2 },
-};
-
-const layoutName = {
-    labelCol: { span: 1 },
-    wrapperCol: { span: 5 },
-};
-
-const layoutDepartment = {
-    labelCol: { span: 2 },
-    wrapperCol: { span: 20 },
-};
 
 class DepartmentForm extends React.Component {
 
@@ -124,33 +110,52 @@ class DepartmentForm extends React.Component {
         <div className="list-container">
             <Title level={2} >Departments</Title>
             <Divider orientation="right" style={{ marginTop: 15, marginBottom: 30 }}></Divider>
-            <Form className="form-container" onFinish={ this.submitDepartment } >
+            <Form layout="vertical" className="form-container" onFinish={ this.submitDepartment } >
                 <div className="form-margin">
-                    <Form.Item label="Id" {...layoutId}>
-                        <Input value={this.state.id}  disabled={ true }/>
-                    </Form.Item>
+                    <Row>
+                        <Col span={1}/>
+                        <Col span={2}>
+                            <Form.Item label="Id">
+                                <Input value={this.state.id}  disabled={ true }/>
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
-                    <Form.Item label="Code" {...layoutName}>
-                        <Input value={this.state.code} onChange={e => this.setState({ code: e.target.value })}/>
-                    </Form.Item>
+                    <Row>
+                        <Col span={1}/>
+                        <Col span={9}>
+                            <Form.Item label="Name">
+                                <Input value={this.state.name} onChange={e => this.setState({ name: e.target.value })}/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={1}/>
+                        <Col span={9}>
+                            <Form.Item label="Code">
+                                <Input value={this.state.code} onChange={e => this.setState({ code: e.target.value })}/>
+                            </Form.Item>
+                        </Col> 
+                    </Row>
 
-                    <Form.Item label="Name" {...layoutName}>
-                        <Input value={this.state.name} onChange={e => this.setState({ name: e.target.value })}/>
-                    </Form.Item>
+                    <Row>
+                        <Col span={1}/>
+                        <Col span={19}>
+                            <Form.Item label="Available Services">
+                            <Select
+                                mode="multiple"
+                                placeholder="Please select available services"
+                                style={{ width: '100%' }}
+                                value={ this.state.available_services }
+                                onChange={ this.handleChange }
+                            >
+                                {this.state.servicesData.map(service => (
+                                    <Option key={service['id']} mode="multiple">{service['name']}</Option>
+                                ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
-                    <Form.Item label="Available Services" {...layoutDepartment}>
-                        <Select
-                            mode="multiple"
-                            placeholder="Please select available services"
-                            style={{ width: '100%' }}
-                            value={ this.state.available_services }
-                            onChange={ this.handleChange }
-                        >
-                            {this.state.servicesData.map(service => (
-                                <Option key={service['id']} mode="multiple">{service['name']}</Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
+                    
 
                     <Form.Item style={{ float: 'right', marginTop: 10 }}>
                         <Form.Item style={{ display: 'inline-block', }}>

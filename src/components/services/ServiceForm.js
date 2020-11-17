@@ -1,20 +1,10 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { Typography, Form, Input, Divider, Button, message, } from 'antd';
+import { Typography, Form, Input, Divider, Button, message, Row, Col } from 'antd';
 import { SaveOutlined, CloseCircleOutlined, } from '@ant-design/icons';
 import api from '../../services/api';
 
 const { Title, } = Typography
-
-const layoutId = {
-    labelCol: { span: 1 },
-    wrapperCol: { span: 2 },
-};
-
-const layoutName = {
-    labelCol: { span: 1 },
-    wrapperCol: { span: 5 },
-};
 
 class ServiceForm extends React.Component {
 
@@ -91,15 +81,25 @@ class ServiceForm extends React.Component {
         <div className="list-container">
             <Title level={2} >Services</Title>
             <Divider orientation="right" style={{ marginTop: 15, marginBottom: 30 }}></Divider>
-            <Form className="form-container" onFinish={ this.submitService }>
+            <Form layout={ "vertical" } className="form-container" onFinish={ this.submitService }>
                 <div className="form-margin">
-                    <Form.Item label="Id" {...layoutId}>
-                        <Input value={this.state.id}  disabled={ true }/>
-                    </Form.Item>
+                    <Row>
+                        <Col span={1}/>
+                        <Col span={2}>
+                            <Form.Item label="Id">
+                                <Input value={this.state.id}  disabled={ true }/>
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
-                    <Form.Item label="Name" {...layoutName}>
-                        <Input value={this.state.name} onChange={e => this.setState({ name: e.target.value })}/>
-                    </Form.Item>
+                    <Row>
+                        <Col span={1}/>
+                        <Col span={9}>
+                            <Form.Item label="Name">
+                                <Input value={this.state.name} onChange={e => this.setState({ name: e.target.value })}/>
+                            </Form.Item>
+                        </Col>
+                    </Row> 
 
                     <Form.Item style={{ float: 'right', marginTop: 10 }}>
                         <Form.Item style={{ display: 'inline-block', }}>

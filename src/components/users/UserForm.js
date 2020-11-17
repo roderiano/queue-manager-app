@@ -1,16 +1,10 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { Typography, Form, Input, Divider, Button, message, Checkbox } from 'antd';
+import { Typography, Form, Input, Divider, Button, message, Col, Row, Switch } from 'antd';
 import { SaveOutlined, CloseCircleOutlined, } from '@ant-design/icons';
 import api from '../../services/api';
 
 const { Title, } = Typography
-
-const layoutDefault = {
-    labelCol: { span: 2 },
-    wrapperCol: { span: 6 },
-};
-
 
 class UserForm extends React.Component {
 
@@ -99,8 +93,8 @@ class UserForm extends React.Component {
         }
     };
 
-    onChange = e => {
-        this.setState({ is_superuser: e.target.checked });
+    onChange = checked => {
+        this.setState({ is_superuser: checked });
     };
 
     render () {
@@ -108,39 +102,71 @@ class UserForm extends React.Component {
         <div className="list-container">
             <Title level={2} >Users</Title>
             <Divider orientation="right" style={{ marginTop: 15, marginBottom: 30 }}></Divider>
-            <Form className="form-container" onFinish={ this.submitUser }>
+            <Form layout={ "vertical" } className="form-container" onFinish={ this.submitUser }>
                 <div className="form-margin">
-                    <Form.Item label="Id" {...layoutDefault}>
-                        <Input value={this.state.id}  disabled={ true }/>
-                    </Form.Item>
+                    <Row>
+                        <Col span={1}/>
+                        <Col span={2}>
+                            <Form.Item label="Id" >
+                                <Input value={this.state.id}  disabled={ true }/>
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
-                    <Form.Item label="Username" {...layoutDefault}>
-                        <Input value={this.state.username} onChange={e => this.setState({ username: e.target.value })}/>
-                    </Form.Item>
+                    <Row>
+                        <Col span={1}/>
+                        <Col span={9}>
+                            <Form.Item label="Username">
+                                <Input value={this.state.username} onChange={e => this.setState({ username: e.target.value })}/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={1}/>
+                        <Col span={9}>
+                            <Form.Item label="Password">
+                                <Input.Password value={this.state.password} onChange={e => this.setState({ password: e.target.value })}/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={1}/>
+                        <Col span={2}>
+                            <Form.Item label="Super User" rules={[{ type: 'email' }]}>
+                                <Switch checked={this.state.is_superuser} onChange={this.onChange} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
-                    <Form.Item label="Password" {...layoutDefault}>
-                        <Input.Password value={this.state.password} onChange={e => this.setState({ password: e.target.value })}/>
-                    </Form.Item>
+                    <Divider dashed />
 
-                    <Form.Item label="First Name" {...layoutDefault}>
-                        <Input value={this.state.first_name} onChange={e => this.setState({ first_name: e.target.value })}/>
-                    </Form.Item>
+                    <Row>
+                        <Col span={1}/>
+                        <Col span={9}>
+                            <Form.Item label="Place" rules={[{ type: 'email' }]}>
+                                <Input value={this.state.place} onChange={e => this.setState({ place: e.target.value })}/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={1}/>
+                        <Col span={9}>
+                            <Form.Item label="Email" rules={[{ type: 'email' }]}>
+                                <Input value={this.state.email} onChange={e => this.setState({ email: e.target.value })}/>
+                            </Form.Item>    
+                        </Col>
+                        <Col span={1}/>
+                    </Row>
 
-                    <Form.Item label="Last Name" {...layoutDefault}>
-                        <Input value={this.state.last_name} onChange={e => this.setState({ last_name: e.target.value })}/>
-                    </Form.Item>
-
-                    <Form.Item label="Email" {...layoutDefault}  rules={[{ type: 'email' }]}>
-                        <Input value={this.state.email} onChange={e => this.setState({ email: e.target.value })}/>
-                    </Form.Item>
-
-                    <Form.Item label="Place" {...layoutDefault}  rules={[{ type: 'email' }]}>
-                        <Input value={this.state.place} onChange={e => this.setState({ place: e.target.value })}/>
-                    </Form.Item>
-
-                    <Form.Item label="Super User" {...layoutDefault}  rules={[{ type: 'email' }]}>
-                        <Checkbox checked={this.state.is_superuser} onChange={this.onChange} />
-                    </Form.Item>
+                    <Row>
+                        <Col span={1}/>
+                        <Col span={9}>
+                            <Form.Item label="First Name" >
+                                <Input value={this.state.first_name} onChange={e => this.setState({ first_name: e.target.value })}/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={1}/>
+                        <Col span={9}>
+                            <Form.Item label="Last Name" >
+                                <Input value={this.state.last_name} onChange={e => this.setState({ last_name: e.target.value })}/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={1}/>
+                    </Row>
 
                     <Form.Item style={{ float: 'right', marginTop: 10 }}>
                         <Form.Item style={{ display: 'inline-block', }}>

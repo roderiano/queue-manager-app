@@ -1,10 +1,9 @@
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import { Typography, Form, Input, Divider, Button, message, Select, Steps, Col, Row } from 'antd';
-import { CheckOutlined, CloseCircleOutlined, } from '@ant-design/icons';
+import { withRouter, } from 'react-router-dom';
+import { Typography, Input, Divider, Button, message, Select, Steps, Col, Row } from 'antd';
+import { CheckOutlined, } from '@ant-design/icons';
 import api from '../../services/api';
 import moment from 'moment';
-import Timer from '../custom/Timer';
 
 
 const { Title, } = Typography
