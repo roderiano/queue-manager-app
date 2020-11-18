@@ -1,13 +1,14 @@
 import React from 'react';
 import { withRouter, } from 'react-router-dom';
-import { message, Table, Typography, Tag, Button, } from 'antd';
+import { message, Table, Typography, Tag, Button, Modal, } from 'antd';
 import api from '../../services/api';
 import moment from 'moment';
-import { PlayCircleOutlined, } from '@ant-design/icons';
+import { PlayCircleOutlined, ExclamationCircleOutlined, } from '@ant-design/icons';
 
 import Timer from '../custom/Timer';
 
 const { Text, } = Typography
+const { confirm, } = Modal
 
 class TokenList extends React.Component {
 
@@ -67,6 +68,7 @@ class TokenList extends React.Component {
         deleteId: null,
         deleteName: "",
         deleteModalVisible: false,
+        pendentTokenModalVisible: false,
     }
 
     componentDidMount = () => {  
@@ -97,19 +99,32 @@ class TokenList extends React.Component {
         try {
             let response = await api.put("tokens/" + id + "/start_attendence/");
 
-            if(response.status === 200) 
-            {
+            if(response.status === 200) {
                 message.success("Token \"" + response.data.key + "\" in attendence.");
                 this.props.history.push("/tokens/token/" + id);
             }
         } catch (err) {
             if (err.response) {
-                Object.keys(err.response.data).map(function(keyName) {
-                    message.error(keyName + ": " + err.response.data[keyName]);  
-                    return keyName;
-                }) 
-            }
-            else {
+                if(err.response.status === 303) {
+                    confirm({
+                        title: 'Token pendent since ' + moment(err.response.data.token_in_attendence.issue_date).format("DD/MM/YYYY HH:mm:ss"),
+                        icon: <ExclamationCircleOutlined />,
+                        content: 'Do you want open this attendence?',
+                        okText: 'Yes',
+                        okType: 'danger',
+                        cancelText: 'No',
+                        onOk: () => {
+                            this.props.history.push("/tokens/token/" + err.response.data.token_in_attendence.id);
+                        }
+                    })
+                }
+                else {
+                    Object.keys(err.response.data).map(function(keyName) {
+                        message.error(keyName + ": " + err.response.data[keyName]);  
+                        return keyName;
+                    }) 
+                }
+            } else {
                 message.error(err.message);   
             }
             
@@ -119,15 +134,16 @@ class TokenList extends React.Component {
 
     render () {
         return (
-        <div className="list-container">
-            <Table dataSource={ this.state.tokensData } 
-                columns={ this.columns } 
-                bordered={ true } 
-                size="middle" 
-                loading={ this.state.waitingResponse } 
-                rowKey="id"
-            />
-        </div>)
+            <div className="list-container">
+                <Table dataSource={ this.state.tokensData } 
+                    columns={ this.columns } 
+                    bordered={ true } 
+                    size="middle" 
+                    loading={ this.state.waitingResponse } 
+                    rowKey="id"
+                />
+            </div>
+        )
     }
 }
 

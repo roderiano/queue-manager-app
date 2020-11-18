@@ -155,8 +155,6 @@ class DepartmentForm extends React.Component {
                         </Col>
                     </Row>
 
-                    
-
                     <Form.Item style={{ float: 'right', marginTop: 10 }}>
                         <Form.Item style={{ display: 'inline-block', }}>
                             <Link to="/departments" >
