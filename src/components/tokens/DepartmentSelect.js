@@ -1,9 +1,13 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { Typography, Button, message, Statistic, Card, List, Row, Col, Divider, } from 'antd';
+import { Typography, Button, message, Statistic, Card, List, Row, Col, Divider, Modal } from 'antd';
 import api from '../../services/api';
+import AuthenticationManager from '../../services/auth';
+import moment from 'moment';
+import { ExclamationCircleOutlined, } from '@ant-design/icons';
 
 const { Title, } = Typography
+const { confirm, } = Modal
 
 class DepartmentSelect extends React.Component {
 
@@ -13,6 +17,7 @@ class DepartmentSelect extends React.Component {
 
     componentDidMount = () => {  
         this.getDepartments();
+        this.getInAttendenceTokens();
     }
 
     getDepartments = async e => {
@@ -29,8 +34,39 @@ class DepartmentSelect extends React.Component {
             else {
                 message.error(err.message);   
             }
-            
-            await this.setState({ waitingResponse: false });
+        }
+    }
+
+    getInAttendenceTokens = async e => {
+        try {
+            let authManager = new AuthenticationManager();
+            console.log(authManager.getUser().id);
+
+            let response = await api.get("tokens?status=IAT&clerk=" + authManager.getUser().id);
+
+            if (response.data.length > 0) {
+                confirm({
+                    title: 'Token pendent since ' + moment(response.data[0].issue_date).format("DD/MM/YYYY HH:mm:ss"),
+                    icon: <ExclamationCircleOutlined />,
+                    content: 'Do you want open this attendence?',
+                    okText: 'Yes',
+                    okType: 'danger',
+                    cancelText: 'No',
+                    onOk: () => {
+                        this.props.history.push("/tokens/token/" + response.data[0].id);
+                    }
+                })
+            }
+        } catch (err) {
+            if (err.response) {
+                Object.keys(err.response.data).map(function(keyName) {
+                    message.error(keyName + ": " + err.response.data[keyName]);  
+                    return keyName;
+                }) 
+            }
+            else {
+                message.error(err.message);   
+            }
         }
     }
 

@@ -52,11 +52,9 @@ class TokenList extends React.Component {
                 title: 'Action',
                 align: 'center',
                 width: '1%',
-                render: (record) => (
-                    <Button type="text" icon={<PlayCircleOutlined />} size={"large"} onClick={e => this.startAttendence(record.id)}>
-                        Start Attendence
-                    </Button>
-                )
+                render: (record) => (<Button type="text" icon={<PlayCircleOutlined />} size={"large"} onClick={e => this.startAttendence(record.id)}> 
+                                        Start Attendence
+                                    </Button>)
             },
         ];
     }

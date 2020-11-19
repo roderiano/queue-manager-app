@@ -142,9 +142,13 @@ class DepartmentForm extends React.Component {
                             <Form.Item label="Available Services">
                             <Select
                                 mode="multiple"
-                                placeholder="Please select available services"
+                                placeholder="Select available services"
                                 style={{ width: '100%' }}
                                 value={ this.state.available_services }
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
                                 onChange={ this.handleChange }
                             >
                                 {this.state.servicesData.map(service => (

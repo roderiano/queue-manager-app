@@ -148,7 +148,7 @@ class TokenForm extends React.Component {
                                     placeholder="Select provided service"
                                     optionFilterProp="children"
                                     filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     }
                                     value={this.state.service} 
                                     onChange={ this.handleChange }
