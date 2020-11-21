@@ -40,8 +40,6 @@ class DepartmentSelect extends React.Component {
     getInAttendenceTokens = async e => {
         try {
             let authManager = new AuthenticationManager();
-            console.log(authManager.getUser().id);
-
             let response = await api.get("tokens?status=IAT&clerk=" + authManager.getUser().id);
 
             if (response.data.length > 0) {
@@ -92,10 +90,10 @@ class DepartmentSelect extends React.Component {
                                         <Statistic title="ISSUED" value={instance.tokens_info.issued} suffix="tokens" />
                                     </Col>
                                     <Col span={8}>
-                                        <Statistic title="ARCHIVED" value={instance.tokens_info.archived} suffix="tokens" />
+                                        <Statistic title="ATTENDENCE" value={instance.tokens_info.in_attendence} suffix="tokens" />
                                     </Col>
                                     <Col span={8}>
-                                        <Statistic title="IN ATTENDENCE" value={instance.tokens_info.in_attendence} suffix="tokens" />
+                                        <Statistic title="ARCHIVED" value={instance.tokens_info.archived} suffix="tokens" />
                                     </Col>
                                 </Row>
                             </Card>
