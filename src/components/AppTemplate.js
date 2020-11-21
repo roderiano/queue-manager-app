@@ -8,7 +8,7 @@ import {
   ApartmentOutlined
 } from '@ant-design/icons';
 import AuthenticationManager from '../services/auth'
-import { Switch, Route, Link, withRouter } from "react-router-dom";
+import { Route, Link, withRouter } from "react-router-dom";
 import ServiceList from './services/ServiceList'
 import ServiceForm from './services/ServiceForm'
 import DepartmentTokens from './tokens/DepartmentSelect'
@@ -61,16 +61,12 @@ class AppTemplate extends React.Component {
     activeModule = (module) => {
         this.setState({ activedModule: module, });
     };
-    
-    onSiderCollapse = siderCollapsed => {
-        this.setState({ siderCollapsed });
-    };
   
     render () {
         const { location } = this.props
         
         let selectedKeys = [];
-        let openedSubmenu = ['/users', '/services', '/departments'].includes(location.pathname) ? ['manager'] : [];
+        let openedSubmenu = /(users)|(services)|(departments)/i.test(location.pathname) ? ['manager'] : [];
 
         if(/(department-select)|(tokens)/i.test(location.pathname))
             selectedKeys = ['/tokens']
@@ -86,7 +82,6 @@ class AppTemplate extends React.Component {
         return (
             <Layout style={{ minHeight: '100vh' }} >
                 <Sider 
-                    onCollapse={this.onSiderCollapse} 
                     style={{
                             overflow: 'auto',
                             height: '100vh',
