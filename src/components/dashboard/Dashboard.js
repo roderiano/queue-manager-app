@@ -1,9 +1,10 @@
 import React from 'react';
 import { withRouter, } from 'react-router-dom';
-import { Button, message, Statistic, Card, Row, Col, DatePicker, Affix } from 'antd';
+import { Button, message, Statistic, Card, Row, Col, DatePicker, } from 'antd';
 import api from '../../services/api';
 import moment from 'moment';
 import { BellOutlined, FieldTimeOutlined, ClockCircleOutlined, } from '@ant-design/icons';
+import Chart from 'chart.js';
 
 const { RangePicker, } = DatePicker
 
@@ -13,26 +14,172 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props)
 
+        this.backgroundColor = [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+        ];
+        this.borderColor = [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+        ];
+
         this.state = {
             tokensData: [],
             startDate: moment().hour(0).minutes(0).seconds(0),
             endDate:  moment().add(1, 'days').hour(0).minutes(0).seconds(0), 
-            generalInfo: { totalTokens: "-", averageWaiting: "-", averageInAttendance: "-" }
+            generalInfo: { totalTokens: "-", averageWaiting: "-", averageInAttendance: "-" },
         };
     }
 
-    buildDashboard = async e => { 
-        await this.getTokens();
-
-        if(this.state.tokensData.length > 0) {
-            await this.refreshGeneralInfo();
-        }
+    componentDidMount = () => {
+        this.buildDashboard();
     }
 
-    getTokens = async e => {
+    buildDashboard = async e => {
+        var canvasTokensAmountPerDepartment = document.getElementById('tokensAmountPerDepartmentChart');
+        var canvasTokensAmountPerClerk = document.getElementById('tokensAmountPerClerkChart');
+        var canvasTotalTimePerClerk = document.getElementById('totalTimePerClerkChart');
+        var canvasServicesAmount = document.getElementById('servicesAmountChart');
+
         try {
-            let response = await api.get("tokens?start_date=" + this.state.startDate.format() + "&end_date=" + this.state.endDate.format());
-            this.setState({ tokensData: response.data });
+            let response = await api.get("tokens/dashboard_data/?start_date=" + this.state.startDate.format() + "&end_date=" + this.state.endDate.format());
+
+            // Tokens amount per department
+            if(this.tokensAmountPerDepartmentChart != null){
+                this.tokensAmountPerDepartmentChart.destroy();
+            }
+            
+            this.tokensAmountPerDepartmentChart = new Chart(canvasTokensAmountPerDepartment, {
+                type: 'pie',
+                data: {
+                    labels: response.data.tokens_amount_per_department.labels,
+                    datasets: [{
+                        data: response.data.tokens_amount_per_department.data,
+                        backgroundColor: this.backgroundColor,
+                        borderColor: this.borderColor,
+                        borderWidth: 1,
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+
+            // Service amount
+            if(this.servicesAmountChart != null){
+                this.servicesAmountChart.destroy();
+            }
+
+            this.servicesAmountChart = new Chart(canvasServicesAmount, {
+                type: 'pie',
+                data: {
+                    labels: response.data.services_amount.labels,
+                    datasets: [{
+                        data: response.data.services_amount.data,
+                        backgroundColor: this.backgroundColor,
+                        borderColor: this.borderColor,
+                        borderWidth: 1,
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+
+            // Total time per clerk
+            if(this.totalTimePerkClerChart != null){
+                this.totalTimePerkClerChart.destroy();
+            }
+
+            console.log(response.data.total_time_per_clerk.data);
+            this.totalTimePerkClerChart = new Chart(canvasTotalTimePerClerk, {
+                type: 'bar',
+                data: {
+                    labels: response.data.total_time_per_clerk.labels,
+                    datasets: [{
+                        label: "Clerks",
+                        data: response.data.total_time_per_clerk.data,
+                        backgroundColor: this.backgroundColor,
+                        borderColor: this.borderColor,
+                        borderWidth: 1,
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var label;
+                                var minutes;
+                                var duration;
+                                
+                                minutes = Math.round(tooltipItem.yLabel * 100) / 100;
+                                duration = moment.duration(minutes, 'minutes');
+                                
+                                label =  moment.utc(duration.as('milliseconds')).format('HH:mm:ss') + " | " + minutes + " minutes";
+                                
+                                return label;
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Tokens amount per clerk
+            if(this.tokensAmountPerClerkChart != null){
+                this.tokensAmountPerClerkChart.destroy();
+            }
+
+            console.log(response.data.total_time_per_clerk.data);
+            this.tokensAmountPerClerkChart = new Chart(canvasTokensAmountPerClerk, {
+                type: 'bar',
+                data: {
+                    labels: response.data.tokens_amount_per_clerk.labels,
+                    datasets: [{
+                        label: "Clerks",
+                        data: response.data.tokens_amount_per_clerk.data,
+                        backgroundColor: this.backgroundColor,
+                        borderColor: this.borderColor,
+                        borderWidth: 1,
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                }
+            });
+
         } catch (err) {
             if (err.response) {
                 Object.keys(err.response.data).map(function(keyName) {
@@ -47,34 +194,6 @@ class Dashboard extends React.Component {
             this.setState({ waitingResponse: false });
         }
     }
-
-    refreshGeneralInfo = async e => {
-        let totalTokens;
-        let averageWaiting;
-        let averageInAttendance;
-        let duration = moment.duration();
-        
-
-        // Total tokens
-        totalTokens = this.state.tokensData.length;
-
-        // Average waiting
-        duration = moment.duration();
-        this.state.tokensData.forEach(token => {
-            duration.add(token.time_waiting_attendence);   
-        });
-        averageWaiting = moment.utc(duration.as('milliseconds') / this.state.tokensData.length).format('HH:mm:ss');
-
-        // Average in attendance
-        duration = moment.duration();
-        this.state.tokensData.forEach(token => {
-            duration.add(token.time_in_attendence);   
-            
-        });
-        averageInAttendance = moment.utc(duration.as('milliseconds') / this.state.tokensData.length).format('HH:mm:ss');
-
-        this.setState({ generalInfo: { totalTokens: totalTokens, averageWaiting: averageWaiting, averageInAttendance: averageInAttendance} })
-    }
     
     onChange = (value, dateString) => {
         this.setState({
@@ -86,19 +205,17 @@ class Dashboard extends React.Component {
     render () {
         return (
             <>
-                <Affix offsetTop={10} style={{marginBottom: '1%'}}>
-                    <div className="form-container" style={{width: '50%', marginLeft: '25%', marginRight: '25%'}}>
-                        <div className="form-margin">
-                            <RangePicker 
-                                style={{ marginRight: '1%', width: '69%' }}
-                                onChange={this.onChange}
-                                defaultValue={[this.state.startDate, this.state.endDate]}
-                                showTime
-                            />
-                            <Button type="primary" style={{width: '30%'}} onClick={e => this.buildDashboard()}>Search</Button>
-                        </div>
-                    </div>  
-                </Affix>
+                <div className="form-container" style={{width: '50%', marginLeft: '25%', marginRight: '25%', marginBottom: '1%'}}>
+                    <div className="form-margin">
+                        <RangePicker 
+                            style={{ marginRight: '1%', width: '69%' }}
+                            onChange={this.onChange}
+                            defaultValue={[this.state.startDate, this.state.endDate]}
+                            showTime
+                        />
+                        <Button type="primary" style={{width: '30%'}} onClick={e => this.buildDashboard()}>Search</Button>
+                    </div>
+                </div>  
                 <Row gutter={16}>
                     <Col span={8}>
                         <Card>
@@ -131,11 +248,26 @@ class Dashboard extends React.Component {
                 </Row>
                 <Row style={{ marginTop: 25 }} gutter={16}>
                     <Col span={12}>
-                        <Card title="Attendance per Department">
+                        <Card title="Token amount per department">
+                            <canvas id="tokensAmountPerDepartmentChart" width="100%" height="50"></canvas>
                         </Card>
                     </Col>
                     <Col span={12}>
-                        <Card title="Average in Attendance">
+                        <Card title="Service amount">
+                        <canvas id="servicesAmountChart" width="100%" height="50"></canvas>
+                        </Card>
+                    </Col>
+                </Row>
+
+                <Row style={{ marginTop: 25 }} gutter={16}>
+                <Col span={12}>
+                        <Card title="Total time in attendance per Clerk">
+                        <canvas id="totalTimePerClerkChart" width="100%" height="50"></canvas>
+                        </Card>
+                    </Col>
+                    <Col span={12}>
+                        <Card title="Token amount per Clerk">
+                            <canvas id="tokensAmountPerClerkChart" width="100%" height="50"></canvas>
                         </Card>
                     </Col>
                 </Row>
