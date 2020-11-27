@@ -52,133 +52,132 @@ class Dashboard extends React.Component {
         try {
             let response = await api.get("tokens/dashboard_data/?start_date=" + this.state.startDate.format() + "&end_date=" + this.state.endDate.format());
 
-            // Tokens amount per department
-            if(this.tokensAmountPerDepartmentChart != null){
-                this.tokensAmountPerDepartmentChart.destroy();
-            }
-            
-            this.tokensAmountPerDepartmentChart = new Chart(canvasTokensAmountPerDepartment, {
-                type: 'pie',
-                data: {
-                    labels: response.data.tokens_amount_per_department.labels,
-                    datasets: [{
-                        data: response.data.tokens_amount_per_department.data,
-                        backgroundColor: this.backgroundColor,
-                        borderColor: this.borderColor,
-                        borderWidth: 1,
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
+            if(response.status === 200) {
+
+                // General info
+                let durationAverageWaiting = moment.duration(response.data.general_info.average_waiting);     
+                let durationAverageInAttendance = moment.duration(response.data.general_info.average_in_attendace); 
+
+                let labelWaiting =  moment.utc(durationAverageWaiting.as('milliseconds')).format('HH:mm:ss');
+                let labelInAttendance =  moment.utc(durationAverageInAttendance.as('milliseconds')).format('HH:mm:ss');
+
+                this.setState({generalInfo: { 
+                                                totalTokens: response.data.general_info.total_tokens, 
+                                                averageWaiting: labelWaiting, 
+                                                averageInAttendance: labelInAttendance 
+                                            }
+                                });
+
+                // Tokens amount per department
+                if(this.tokensAmountPerDepartmentChart != null){
+                    this.tokensAmountPerDepartmentChart.destroy();
                 }
-            });
-
-            // Service amount
-            if(this.servicesAmountChart != null){
-                this.servicesAmountChart.destroy();
-            }
-
-            this.servicesAmountChart = new Chart(canvasServicesAmount, {
-                type: 'pie',
-                data: {
-                    labels: response.data.services_amount.labels,
-                    datasets: [{
-                        data: response.data.services_amount.data,
-                        backgroundColor: this.backgroundColor,
-                        borderColor: this.borderColor,
-                        borderWidth: 1,
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-
-            // Total time per clerk
-            if(this.totalTimePerkClerChart != null){
-                this.totalTimePerkClerChart.destroy();
-            }
-
-            console.log(response.data.total_time_per_clerk.data);
-            this.totalTimePerkClerChart = new Chart(canvasTotalTimePerClerk, {
-                type: 'bar',
-                data: {
-                    labels: response.data.total_time_per_clerk.labels,
-                    datasets: [{
-                        label: "Clerks",
-                        data: response.data.total_time_per_clerk.data,
-                        backgroundColor: this.backgroundColor,
-                        borderColor: this.borderColor,
-                        borderWidth: 1,
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
+                
+                this.tokensAmountPerDepartmentChart = new Chart(canvasTokensAmountPerDepartment, {
+                    type: 'pie',
+                    data: {
+                        labels: response.data.tokens_amount_per_department.labels,
+                        datasets: [{
+                            data: response.data.tokens_amount_per_department.data,
+                            backgroundColor: this.backgroundColor,
+                            borderColor: this.borderColor,
+                            borderWidth: 1,
                         }]
                     },
-                    tooltips: {
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-                                var label;
-                                var minutes;
-                                var duration;
-                                
-                                minutes = Math.round(tooltipItem.yLabel * 100) / 100;
-                                duration = moment.duration(minutes, 'minutes');
-                                
-                                label =  moment.utc(duration.as('milliseconds')).format('HH:mm:ss') + " | " + minutes + " minutes";
-                                
-                                return label;
+                });
+
+                // Service amount
+                if(this.servicesAmountChart != null){
+                    this.servicesAmountChart.destroy();
+                }
+
+                this.servicesAmountChart = new Chart(canvasServicesAmount, {
+                    type: 'pie',
+                    data: {
+                        labels: response.data.services_amount.labels,
+                        datasets: [{
+                            data: response.data.services_amount.data,
+                            backgroundColor: this.backgroundColor,
+                            borderColor: this.borderColor,
+                            borderWidth: 1,
+                        }]
+                    },
+                });
+
+                // Total time per clerk
+                if(this.totalTimePerkClerChart != null){
+                    this.totalTimePerkClerChart.destroy();
+                }
+
+                this.totalTimePerkClerChart = new Chart(canvasTotalTimePerClerk, {
+                    type: 'bar',
+                    data: {
+                        labels: response.data.total_time_per_clerk.labels,
+                        datasets: [{
+                            label: "Clerks",
+                            data: response.data.total_time_per_clerk.data,
+                            backgroundColor: this.backgroundColor,
+                            borderColor: this.borderColor,
+                            borderWidth: 1,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    var label;
+                                    var seconds;
+                                    var duration;
+                                    
+                                    seconds = Math.round(tooltipItem.yLabel * 100) / 100;
+                                    duration = moment.duration(seconds, 'seconds');
+                                    
+                                    label =  moment.utc(duration.as('milliseconds')).format('HH:mm:ss');
+                                    
+                                    return label;
+                                }
                             }
                         }
                     }
+                });
+
+                // Tokens amount per clerk
+                if(this.tokensAmountPerClerkChart != null){
+                    this.tokensAmountPerClerkChart.destroy();
                 }
-            });
 
-            // Tokens amount per clerk
-            if(this.tokensAmountPerClerkChart != null){
-                this.tokensAmountPerClerkChart.destroy();
-            }
-
-            console.log(response.data.total_time_per_clerk.data);
-            this.tokensAmountPerClerkChart = new Chart(canvasTokensAmountPerClerk, {
-                type: 'bar',
-                data: {
-                    labels: response.data.tokens_amount_per_clerk.labels,
-                    datasets: [{
-                        label: "Clerks",
-                        data: response.data.tokens_amount_per_clerk.data,
-                        backgroundColor: this.backgroundColor,
-                        borderColor: this.borderColor,
-                        borderWidth: 1,
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
+                console.log(response.data.total_time_per_clerk.data);
+                this.tokensAmountPerClerkChart = new Chart(canvasTokensAmountPerClerk, {
+                    type: 'bar',
+                    data: {
+                        labels: response.data.tokens_amount_per_clerk.labels,
+                        datasets: [{
+                            label: "Clerks",
+                            data: response.data.tokens_amount_per_clerk.data,
+                            backgroundColor: this.backgroundColor,
+                            borderColor: this.borderColor,
+                            borderWidth: 1,
                         }]
                     },
-                }
-            });
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                    }
+                });
+
+            }
 
         } catch (err) {
             if (err.response) {
@@ -220,7 +219,7 @@ class Dashboard extends React.Component {
                     <Col span={8}>
                         <Card>
                         <Statistic
-                            title="Tokens"
+                            title="Total tokens"
                             prefix={<BellOutlined />}
                             value={this.state.generalInfo.totalTokens}
                         />
@@ -229,7 +228,7 @@ class Dashboard extends React.Component {
                     <Col span={8}>
                         <Card>
                         <Statistic
-                            title="Average Waiting"
+                            title="Average waiting"
                             prefix={<FieldTimeOutlined />}
                             value={this.state.generalInfo.averageWaiting}
                         />
@@ -238,7 +237,7 @@ class Dashboard extends React.Component {
                     <Col span={8}>
                         <Card>
                         <Statistic
-                            title="Average in Attendance"
+                            title="Average in attendance"
                             prefix={<ClockCircleOutlined />}
                             value={this.state.generalInfo.averageInAttendance}
                         />
