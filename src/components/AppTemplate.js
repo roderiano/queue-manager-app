@@ -91,39 +91,40 @@ class AppTemplate extends React.Component {
                 >
                     <div className="logo"></div>
                     <Menu theme="dark" selectedKeys={selectedKeys} mode="inline" defaultOpenKeys={openedSubmenu}>
-                        <Menu.Item key="/tokens" icon={<ClockCircleOutlined />}>
+                        <Menu.Item key="tokens" icon={<ClockCircleOutlined />}>
                             Tokens
                             <Link to="/department-select"/>
                         </Menu.Item>
 
-                        <Menu.Item key="/dashboard" icon={<PieChartOutlined />} disabled={ !this.authManager.getUser().is_superuser }>
+                        <Menu.Item key="dashboard" icon={<PieChartOutlined />} disabled={ !this.authManager.getUser().is_superuser }>
                             Dashboard
                             <Link to="/dashboard"/>
                         </Menu.Item>
                         
                         <SubMenu key="manager" icon={<SettingOutlined />} title="Settings" disabled={ !this.authManager.getUser().is_superuser }>
-                            <Menu.Item key="/users">
+                            <Menu.Item key="users">
                                 Users
                                 <Link to="/users" />
                             </Menu.Item>
 
-                            <Menu.Item key="/services">
+                            <Menu.Item key="services">
                                 Services
                                 <Link to="/services" />
                             </Menu.Item>
 
-                            <Menu.Item key="/departments">
+                            <Menu.Item key="departments">
                                 Departments
                                 <Link to="/departments" />
                             </Menu.Item>
                         </SubMenu>
 
                         <SubMenu key="sub2" icon={<ApartmentOutlined />} title="Modules" disabled={ !this.authManager.getUser().is_superuser }>
-                            <Menu.Item key="/monitor">
+                            <Menu.Item key="monitor">
                                 Monitor
+                                <Link to="/monitor" />
                             </Menu.Item>
 
-                            <Menu.Item key="/totem">
+                            <Menu.Item key="totem">
                                 Totem
                                 <Link to="/totem" />
                             </Menu.Item>

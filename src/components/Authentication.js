@@ -41,7 +41,7 @@ class Authentication extends Component {
     render() {
         return (
             <Row type="flex" justify="center" align="middle" style={{height: '50%'}}>
-                <Space direction="vertical" style={{ width: '30%', height:'100%', textAlign: 'center' }}>
+                <Space direction="vertical" style={{ width: '30%', textAlign: 'center' }}>
                         <Card title={<Title level={5}>USER AUTHENTICATION</Title>} style={{ width: '100%', height:'100%', marginTop: '50%'}}>
                         <Form onFinish={this.authenticate}>
                             <Form.Item name="username" rules={[{ required: true, message: 'Please input your username.'}]}>

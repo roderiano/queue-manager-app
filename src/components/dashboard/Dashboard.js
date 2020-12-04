@@ -139,7 +139,7 @@ class Dashboard extends React.Component {
                                     seconds = Math.round(tooltipItem.yLabel * 100) / 100;
                                     duration = moment.duration(seconds, 'seconds');
                                     
-                                    label =  moment.utc(duration.as('milliseconds')).format('HH:mm:ss');
+                                    label =  "Total: " + moment.utc(duration.as('milliseconds')).format('HH:mm:ss');
                                     
                                     return label;
                                 }
@@ -159,7 +159,7 @@ class Dashboard extends React.Component {
                     data: {
                         labels: response.data.tokens_amount_per_clerk.labels,
                         datasets: [{
-                            label: "Clerks",
+                            label: "Tokens",
                             data: response.data.tokens_amount_per_clerk.data,
                             backgroundColor: this.backgroundColor,
                             borderColor: this.borderColor,

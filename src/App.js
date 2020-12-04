@@ -5,6 +5,7 @@ import Authentication from './components/Authentication';
 import AuthenticationManager from "./services/auth";
 import AppCore from './components/AppTemplate';
 import Totem from './components/totem/Totem'
+import Monitor from './components/monitor/Monitor'
 
 const App = () => {
 
@@ -13,6 +14,7 @@ const App = () => {
     return (
         <Switch>
             <Route exact path="/totem" component={ () => <Totem /> }/>
+            <Route exact path="/monitor" component={ () => <Monitor /> }/>
             <Route path="/" component={ () => authManager.isAuthenticated() ? <AppCore /> : <Authentication /> }/>
         </Switch>
     );
