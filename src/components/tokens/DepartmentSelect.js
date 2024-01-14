@@ -72,7 +72,7 @@ class DepartmentSelect extends React.Component {
         return (
             <>
                 <List
-                    grid={{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 4, }}
+                    grid={{ gutter: 16 }}
                     dataSource={this.state.departmentsData}
                     renderItem={instance => (
                         <List.Item>
@@ -85,7 +85,7 @@ class DepartmentSelect extends React.Component {
                             >
                                 <Title level={4}>{instance.department.name.toUpperCase()}</Title>
                                 <Divider />
-                                <Row gutter={16}>
+                                <Row gutter={32}>
                                     <Col span={8}>
                                         <Statistic title="ISSUED" value={instance.tokens_info.issued} suffix="tokens" />
                                     </Col>
